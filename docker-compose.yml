@@ -1,0 +1,22 @@
+services:
+  mneme-server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    ports:
+      - "${SERVER_PORT:-3000}:3000"
+    env_file: .env
+    restart: unless-stopped
+
+  mneme-web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - "${WEB_PORT:-3001}:3001"
+    env_file: .env
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://mneme-server:3000}
+    depends_on:
+      - mneme-server
+    restart: unless-stopped
