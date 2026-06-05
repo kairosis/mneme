@@ -3,7 +3,7 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 FROM base AS deps
 WORKDIR /app
-COPY pnpm-workspace.yaml package.json tsconfig.base.json ./
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json tsconfig.base.json ./
 COPY packages/qdrant/package.json packages/qdrant/
 COPY apps/server/package.json apps/server/
 RUN pnpm install --frozen-lockfile
@@ -20,7 +20,7 @@ RUN pnpm --filter server build
 FROM node:20-alpine AS runner
 WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@latest --activate
-COPY pnpm-workspace.yaml package.json tsconfig.base.json ./
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json tsconfig.base.json ./
 COPY packages/qdrant/package.json packages/qdrant/
 COPY apps/server/package.json apps/server/
 RUN pnpm install --frozen-lockfile --prod
