@@ -1,4 +1,4 @@
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 FROM base AS deps
@@ -14,7 +14,7 @@ COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
 COPY . .
 RUN pnpm --filter web build
 
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=build /app/apps/web/.next/standalone ./
